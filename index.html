@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KBS 통합 실시간 플레이어</title>
+    <title>한국 통합 라디오 플레이어</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; width: 100%; text-align: center; }
         h1 { font-size: 24px; color: #0056b3; margin-bottom: 20px; }
-        select { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 20px; border-radius: 6px; border: 1px solid #ccc; }
-        video { width: 100%; background: #000; border-radius: 6px; }
-        .btn-box { margin-top: 25px; }
+        select { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 20px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; }
+        video { width: 100%; height: 50px; background: #222; border-radius: 6px; margin-bottom: 10px; }
+        .btn-box { margin-top: 15px; }
         .btn { display: block; padding: 12px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background 0.2s; }
         .btn:hover { background-color: #0056b3; }
         .btn-disabled { background-color: #ccc; pointer-events: none; }
@@ -21,29 +21,30 @@
 <body>
 
 <div class="container">
-    <h1>📺 KBS 통합 실시간 플레이어</h1>
+    <h1>📻 한국 통합 라디오 플레이어</h1>
     
     <select id="channel-selector">
-        <option value="">채널을 선택하세요</option>
+        <option value="">듣고 싶은 채널을 선택하세요</option>
     </select>
 
     <video id="video" controls autoplay></video>
 
     <div class="btn-box">
-        <a id="pls-download" href="#" class="btn btn-disabled" download>⬇️ 현재 채널 PLS 파일 다운로드</a>
+        <a id="pls-download" href="#" class="btn btn-disabled" download>⬇️ 현재 채널 PLS 다운로드 (PC용)</a>
     </div>
 
     <div class="info-box">
-        <strong>💡 외부 플레이어(VLC, 팟플레이어) 주소 추가용 개별 URL:</strong><br>
+        <strong>💡 외부 플레이어(VLC, 팟플레이어 등) 고정 주소:</strong><br>
         <span id="pls-url" style="color:#d9534f; font-weight:bold;">채널을 선택해주세요.</span>
         <br><br>
-        <strong>🔗 현재 선택된 채널 원본 주소 (m3u8):</strong><br>
+        <strong>🔗 현재 원본 주소 (m3u8/aac):</strong><br>
         <span id="stream-url-text" style="color:#555;">채널을 선택해주세요.</span>
     </div>
 </div>
 
 <script>
-    const channelData = {"1tv":"https://padmin.static.kbs.co.kr/live/2025/2/3/1738538621612_433742.png","2tv":"https://padmin.static.kbs.co.kr/live/2025/2/3/1738538621669_433753.png","world":"https://padmin.static.kbs.co.kr/live/2025/2/3/1738538621754_433764.png","news_d":"https://padmin.static.kbs.co.kr/live/2025/3/21/1742522477055_445256.png","drama":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700048773_443879.png","joy":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700048850_443880.png","life":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700049056_443904.png","story":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700048990_443891.png","kids":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700049148_443915.png","1":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605388_442801.png","2":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605462_442812.png","3":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605540_442823.png","4":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605624_442834.png","5":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605728_442845.png","6":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605812_442856.png","7":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605870_442867.png","8":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605956_442878.png","9":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313606035_442889.png","0":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313606103_442890.png","1fm":"https://1fm.gscdn.kbs.co.kr/1fm_192_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8xZm0uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwMzkwMTd9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=AtRotkHal3BfHGE-MsKvm2RVCQQQP90pj0j7unlvSGj0FXvSHB9Ily58CqYzKvRFvQfAYPfLaHic3xIfNC-a8ubO9FYaPvnhCOoIxOM5rIA848W4qnnwWeHuVdCZyxuy2S011Ve6hJ-UhNWpV1Mr8HfZ0xz3hWOkfctRMgSM6BBzrCFfF8WV-ZrrNpgAIYRhpH9r49vnZ9yRRc01CYLz00StSQG4ZTd01iiT2YCRanbLkVUx8H4cQUoJrhcbueI59kFY0x97xQ5cTBXPzrruEplxefT3Np513Y2x-E9OxvJiSgOJ~VgiI0Q~mao5dBRSFo3BB4YdEQPLeq2KfnYudA__","2fm":"https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwMzkwMDl9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=fb3HQLHGnvSeuOim2idCt0rJbAXmPKmd9IO72FXnE~ZfgWv3anzEbbwQPAgBlMRBtGYvHVqCazFoWi-zpUhD04bjpYZtLJOdae95JoHfsYWWgphKcubkkxqM3I~ppKd0WZaDu8TYnZnFNmBhQp4mcudLVxtYVBRxGv3CW1pyadjDSpXEM~QQoTAPzcnWLgdYwM8xod3DiI3UE8c8SZ9ftQq7i8lauXK0aLTAKM2Fq59UVgXe28CVTjAFMMZkG~YXyxQV73hXKYfjMkKdcasa2s5wbkqgclLItIgcmexH9~FZlcPv1eav~ZmsJyURA0fr9ZLUir9Tx4kC0bmUcPZRTQ__","1r":"https://1radio.gscdn.kbs.co.kr/1radio_192_4.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8xcmFkaW8uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwMzkwNTF9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=KhjRgt4SuYSKrTJWFa0QY7MzICSoqJWLXhOmUPl44dcXdHeU7FcVR4E5oTT7b7AF5Mp8VhYsPDG4z4PSNnuTJEKW0uWWRAXloTSreAT3tX4~asRhY761nGK6kJPWxDcnvqthd4GVOYaO~C6owJdE0fAiiwFPTk~Wb1r72DG5kL9popcFX40ZvQtIOIDeAkNh7LNbvyfZvnZmNT0GtvjPBeyq9HtF04uMbChwc~9BxyrEUsiGH8pkZe1q6u2Mm3PaHXqUncMLIEeFxBDDpxDv~UwhgH3lGjEChei2~ucYcDyrBaMWSsiQBf2r4WkYPXlyXXODXC72VobwC5l27I5IYg__","2r":"https://2radio-ad.gscdn.kbs.co.kr/2radio_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8ycmFkaW8tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwMzkwNDZ9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=mL0ttX6MCBlkcLrrVmOWAPr9vpTExlsw7b~0E1jWklaN6OKFC2DcvFgWmkNUMurmCKH1WoJe69~5~v8kyRRLz2UQQYERHmtd4UnrGKb5IQcRQaaXbs8o6oGjtfRCqNEG-Q30xMJJ15t0SN0dBqySfu8o3VkMYRHKiItnc5rKGj8-CZpdDrl3kLpDBhd3eMWpWMl~kU4UcdPcGdAjNcskvk8OhWVsfmse5R66QGjQ99d56rIS3vyW4ncpKZqe0HUJh89e5AzWjKp2TtGATdnYdhZiaacrm4wpbJjHFejX36mwBfVwj1Z3o60~HqDPbUE8Li1DPsQJux94Kv1UvfG05A__","3r":"https://3radio.gscdn.kbs.co.kr/3radio_192_3.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8zcmFkaW8uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwMzkwNTN9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=fz0oWtfvCPzolfB~IEIcMIsCBn1-bdsEhWw~ECU08tPaNdFWFM-ndqyfe1ZJzOF~2Fx0~PytPB2nmZC4Vk2JlPFBHwpPScvH71ZtTBjPjACosZICClYCyCNGIILcBJSbKmjZCnsKypuaA7Xf7fbJuUzSB7VEdyYVThaQL2sEoIcc6DMwPkpGisWquA98GfGASz~xM8nuLRFCQaC8XMNJ3Qg7zCzVyeWfGvdAvmpaYiTBM-a~xI~u5I1lOLzycFYzjPVulSKkLT8PdggwWlo8ue1Eer5LVHn1MV9h8jPwhI0sMa3v7Am4RKgJ8JmrwReubLGQJyyU32o9P91kBSSBag__","han":"https://hanminjokradio.gscdn.kbs.co.kr/hanminjokradio_192_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9oYW5taW5qb2tyYWRpby5nc2Nkbi5rYnMuY28ua3IvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4MjAzOTA0NX19fV19{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=gGsEJjWd60z68DdNapH1LyCtbxXxm8K9uRE~xjEVHwIUx6Qo27AUrE7ACd-bWGybTkcALnTpUxk88U0kjjmjVkoveHj8AbnWmT6dZCRvTeEDcaBoLFJl9Rggmh17EAiqzJV3SpcmSRazjCs4GMFpGIeUrQLdFeKTpou1lw61AdmdBuPBVjKBXrS1nmsQAOn6Z0jDh56-tBc~QBLs2FnH1QbQj51oXuC4p5-w8TuzoFBtVjC-4veO34azBH8mEVuuR1SFl6iZzGUP3pAfTeb1bJndQt7FyrIFNPI7AZUHw6rp~5eExtP3pwBNjR~bO2rW9Fi7XeB9Jr~qzilhTyupsw__","mul":"https://wink11.gscdn.kbs.co.kr/ch1_64_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly93aW5rMTEuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwMzkwNDd9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=NMK6s1zLQ6aScJz~ZEGaMnp3W3x3q4NKuyv3ZwgFqqc66~c-u54-kiMukl~ZYCcGmXj0SjcbfpUVu2dqeeYNjkwwaXk4J7whCy2riEsNRd3pxBRE2vHtStixwwWSZlmiPGMakadZA-3S7qNfuSsgyz5brsZPM9J2lR8T5ofV6aoYBa1HG1x8jPnH3iQLjfHQs0IDYSiAIoRSDSsHcStsQtpWRbT8hcGp3-6-TRn5IEYkA-3C0XAy6oMrxN-gyN3yxNhxPwr6mE1kxJFtGT-dcGwh5QjmVJgVma6lXDSPVUzLGyu~v5mzlBr1LQfW2~tY89GZEA2DSLDUy~ji9YVfYA__","eng":"https://worldradio.gscdn.kbs.co.kr/worldradio_192_4.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly93b3JsZHJhZGlvLmdzY2RuLmticy5jby5rci8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzgyMDM5MDA5fX19XX0_{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=iWdndp1dbRCo4L6uHEND38qvsAiVQpZKIQWWBupBjWd0hFf3LptH5c~ZCvi7tLUjiXLwVX7AV8t9sbbxCCR4Jlug-W6yHQ-iKd9PA0HidDtAN0qmTXW3f~SpQI-YO19LbAnWUoH7l1tC2ot7L~EbxdSCNoxAjPOyFS7y7lYaRJLMPHy3wb8IJt5rmzH7xMWIN4BDso7ZgunZqyC7rsb7IzIw0U5Sn46hHg5SW80gjuRMpgrAwj~W~WoYODuhPyeO7TIH~9T0yHucwhlivIq~s0gUJtzTJPnvLy-Gv0xtslJ5~1MF0Ove9FhjUqAMjZdLcLS2FjqsFdgtRT9W7bd1Yg__"}};
+    // GitHub Action에서 생성된 JSON 데이터 (id: {name, url})
+    const channelData = {"1tv":"https://padmin.static.kbs.co.kr/live/2025/2/3/1738538621612_433742.png","2tv":"https://padmin.static.kbs.co.kr/live/2025/2/3/1738538621669_433753.png","world":"https://padmin.static.kbs.co.kr/live/2025/2/3/1738538621754_433764.png","news_d":"https://padmin.static.kbs.co.kr/live/2025/3/21/1742522477055_445256.png","drama":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700048773_443879.png","joy":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700048850_443880.png","life":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700049056_443904.png","story":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700048990_443891.png","kids":"https://padmin.static.kbs.co.kr/live/2025/3/11/1741700049148_443915.png","1":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605388_442801.png","2":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605462_442812.png","3":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605540_442823.png","4":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605624_442834.png","5":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605728_442845.png","6":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605812_442856.png","7":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605870_442867.png","8":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313605956_442878.png","9":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313606035_442889.png","0":"https://padmin.static.kbs.co.kr/live/2025/3/7/1741313606103_442890.png","1fm":"https://1fm.gscdn.kbs.co.kr/1fm_192_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8xZm0uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwNDI2OTF9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=OMru-ivmESJ7-McptFOVYLOGeNoze386exjseXWc5LxaEHnJd2TmegJahO-4ryOHeshlfnC0MFzmGP-y50st7TjQcGEpp30rd4q4xhRjgvovoHgquAKCjbzYOYZcPejH-Zg6fgikacDM0Ef4mSyhG2RfPRudP~-fsxpE9UjOTINkEqptFQgV3q3QKchctFmE2fJuO6A8uEZn3EoFE8sWF5nm6EtkNezNBt97er0XTHPK6BDe~5ioD9f97gVA-~BnbFBOpUY7Xt0IyyUmBV7DTYoccU-dSNwuVsoEu5QVxUOOcXb7xIMhI6bofyRbMZnHBuYtR-icMxxlYopCqWrt-g__","2fm":"https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwNDI2Nzh9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=iXShKtL-z~O8J106-ax17yZVtM0i4Ief2SQM0V7XVHzqq20Ng6q325~7wjKOKLOAZGTF17t9vfidK7yvpBQ2OvbnBfkGQkoAgP3M0CLqSTxqx6sNIzP8XX0MO-sLDMBNmUvzQVg2VwMTI1wd6oqo9KLT6q0xN-3KLfT7y8nsjALVTlZbLbYdXU9xLnvbVCh3JwkX9H3qQMIM~VSSbXtg2yyUrlpoNWZV1Wmudd3E1l5kBY5uWGVzYj576Evz8oqvHRfW0bWAdULO15QAMlgAM4KSoR7qESua9qmwbfqOnrXMaos6DXF9WQxnGSnyo9DLmqOKtJ-Z6e3N0DISZiaY0Q__","1r":"https://1radio.gscdn.kbs.co.kr/1radio_192_4.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8xcmFkaW8uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwNDI3MjF9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=CamPRDJRfYxYDyBvneZXHVO77yQMSXWB6yjYqrXBOgYsiCkhCWFZ10Sq46hTs3vPxtrmq-NPhTD5yCOUc-cP~aYxMcMnIICptVFZZjHvmRjicZ-QD0bznL-yDigjAEqf6J0eGlJEzfraOr8GdBuikI11f45q4t5LT4NfgWamkbCdrR7HCLLuq4kqUCQ-~B7CH1yYKAlGLmzPJLlZ2JZ2rp5HgE7qgk~7IjG8KKtHYSbzdAkNT0YdVZBEkRdwX2crJvkI6OJSMEyeONek0WEpZciNkYMq~GLO1W6~3OOzuqZ1GHClrLdeH6I4jJgZVY-Xbms~0H1q0ndDVH3FgXdIjA__","2r":"https://2radio-ad.gscdn.kbs.co.kr/2radio_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8ycmFkaW8tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwNDI3MjF9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=g2NQlNQZDMMR-Xu9vVUh9YeyZY-ImIV8XKOBX2ICvDavtdPbMvXc49N9oZi2t4rfvtKf4WgkQ0PhsqrGgWr87BCsXeFAeM3QaVhEWpPjrRIFsWY4TEoCTguKQIKVcDZR2eYyoqCdDix122902WLjaZN19e3BcpWn1EqPQ1Ma378kkKZoyp1AvtdIjNOrfNjA4f31gpykBWi0ymX52Bo52piI7jEjnRTu-nc~GqZg-mTF4-7bmrNqip1aVQE~M6Xf3P40bALx-9h3SFsOcjCB-WjEwedx9V479In8SkWVbxTxXR6Gs~Qtrv8gN-GqbMu9LkujPLdlQTIFO0i5sjT~7w__","3r":"https://3radio.gscdn.kbs.co.kr/3radio_192_3.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8zcmFkaW8uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwNDI3MjJ9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=UkCnKAmBVr50LoRUOlHhCfozz3Liml~qNPXMXiTZsfa1835-r0s3Y1Ab-y4UR1pdwkjvaD2mfoPcAIoG8QUBDHNCJhQLRgxTQeIru2QDW-u04RHc6OrF9vbTUzP05itCxVbrDX1eYV-~S0V9hx~Of6s5vUiKR8YUD7tkcCsBGtSuBCc8-VIm7HMceHnIWvHsiuqKuXI53CInnFgRsrX8HqaqZTRfouZMdpW2L7-jcoSMbuj8aZz9hy0AxTCku1iXb5ucPx1dzspa2MKzarQOEg~8VIuYGiGYax9~SOeN33eM-cXKeQHvZoKWbIjHR97vnrctWXXW9A27xRpxedgV3Q__","han":"https://hanminjokradio.gscdn.kbs.co.kr/hanminjokradio_192_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9oYW5taW5qb2tyYWRpby5nc2Nkbi5rYnMuY28ua3IvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4MjA0MjcxN319fV19{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=cd2bm-0J7RqxE2aaGgLhBOjH~9f-4Mu2wbjlqWm0Zq78gyVjoM4vfiivIrGNOZk1FBhad8A2GuVmqNN4fwNGbEBMH7W~l~Ou0DmRAKNKYkVY-09M3BXqhX8MP93Rd1FVadQ3xOhVwTtZu1d2pBl7liQEk-Mj5cwyNL6RrbPvNIZRvaLA9JuRouu~SJjKY~l8tGBC0OAjpkh~p~KI9gTB6QgLomi9J0c8OvEUwYrpr1k7hZVJrhcF~Bdy6H9oj0xqay~7vyE5MOKSfoZ~aW8cLWMu1y9FKqomjTGPagSofy6RjxAVyfwxlvUowF0xn~~xx~50KjWxDUgo~oa0VkXbfA__","mul":"https://wink11.gscdn.kbs.co.kr/ch1_64_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly93aW5rMTEuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwNDI3MjJ9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=ER~uRUfytJ-kisSqqUZmJxMSmg4z2~RpIh-OM0jgMu50OsYvQkEi2gB3Gj2hue6ulmlrGEvnISnYYHnIJhRKR1~1l5r99h6xUqoWs3ZNpw7gje7jkZwHi2p46-SiOIFCdWCYced-bbGNqfqWqi-1NE77zdYjhurYNxcRkC1Oovbkd-P8EA9P7yiDEupC3P-Jgpta6fbnsxEzr47YRW1qKfI6Rfh6LNeUqAf3GYFFf82YWLEvbShhKhxDrSFMNM-P9yemFxr4fpYNpEX-3iutD-I~-VvtdhxyauQXqlrAs1TX0OIlK-70DNSdrBlBdfQAEgsyIswXtFBvL7OwFmGeFw__","eng":"https://worldradio.gscdn.kbs.co.kr/worldradio_192_4.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly93b3JsZHJhZGlvLmdzY2RuLmticy5jby5rci8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzgyMDQyNjgxfX19XX0_{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=Ba4OawHBiGRRx5djoqcueAaC3M7CdyDAftZHi7xUTyu-KVDUR48WHSwgfqokR1X3vLmZfeWyiJqjZmI8bR3Dw9VMCMyA6qrSw61WXolJEZ8rQMD9zt5zWRc~xUCPBxSYQLcjWAfnpQ-0rjtq0M1CbIsw3pZI~q-AnjCuuObHUcc9gZ4Cw5qYvZ553dFU8G~IsKC~rYzfVRnE8TweKgjMBwEMylcvc3Q4Vh9l6gnUfmQHljOYUleqi7WO5Okb~VzSmq7f0XVaEp8TbKSM0mmWYqzpCm4BZG5gLKJDNv7M3CkWhrHwgCb791EepXQOqiO6~NTaLGfATPWFstMvfBr1MA__"}};
     
     const selector = document.getElementById('channel-selector');
     const video = document.getElementById('video');
@@ -53,21 +54,19 @@
     let hls;
 
     // 드롭다운 메뉴 채우기
-    for (const [name, url] of Object.entries(channelData)) {
+    for (const [id, data] of Object.entries(channelData)) {
         const option = document.createElement('option');
-        // value를 채널 이름(key)으로 설정하여 pls 파일 이름과 매칭되게 합니다.
-        option.value = name;
-        option.textContent = name.toUpperCase();
+        option.value = id;
+        option.textContent = data.name;
         selector.appendChild(option);
     }
 
-    // 베이스 URL 계산
     const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
 
     selector.addEventListener('change', (event) => {
-        const channelName = event.target.value;
+        const channelId = event.target.value;
         
-        if (!channelName) {
+        if (!channelId) {
             video.pause();
             streamUrlText.innerText = "채널을 선택해주세요.";
             plsUrlText.innerText = "채널을 선택해주세요.";
@@ -76,25 +75,26 @@
             return;
         }
 
-        const streamUrl = channelData[channelName];
-        const plsFileName = `kbs_${channelName}.pls`;
+        const channelInfo = channelData[channelId];
+        const streamUrl = channelInfo.url;
+        const plsFileName = `${channelId}.pls`;
 
-        // 텍스트 및 링크 업데이트
+        // UI 텍스트 및 링크 업데이트
         streamUrlText.innerText = streamUrl;
         plsUrlText.innerText = baseUrl + plsFileName;
         plsDownload.href = plsFileName;
         plsDownload.classList.remove('btn-disabled');
 
-        // HLS.js를 통한 재생
-        if (Hls.isSupported()) {
+        // 재생 로직
+        if (Hls.isSupported() && streamUrl.includes('.m3u8')) {
             if (hls) { hls.destroy(); }
             hls = new Hls();
             hls.loadSource(streamUrl);
             hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            hls.on(Hls.Events.MANIFEST_PARSED, function() { video.play(); });
+        } else {
+            // HLS 미지원 환경이거나 일반 aac/mp3 스트리밍인 경우
+            if (hls) { hls.destroy(); }
             video.src = streamUrl;
             video.play();
         }
