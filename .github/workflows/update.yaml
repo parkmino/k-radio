@@ -65,10 +65,10 @@ jobs:
           sleep 0.5
         done
         
-        JSON_DATA="${JSON_DATA%,}}"
+        # 💡 [오류 수정된 부분] 마지막 쉼표(,)를 정확히 제거하고 중괄호를 닫습니다.
+        JSON_DATA="${JSON_DATA%,}"
         JSON_DATA+="}"
         
-        # HTML을 건드리지 않고, 순수 데이터만 channels.json으로 저장
         echo "$JSON_DATA" > channels.json
 
     - name: Commit and Push Changes
@@ -76,10 +76,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         
-        # 예전 방식의 잔재(template.html)가 남아있다면 깔끔하게 삭제
-        rm -f template.html
-        
         git add *.pls channels.json
         git add -u
         
-        git diff --quiet && git diff --staged --quiet || (git commit -m "정기 업데이트: channels.json 및 PLS 갱신" && git push)
+        git diff --quiet && git diff --staged --quiet || (git commit -m "정기 업데이트: JSON 문법 오류 수정 및 URL 갱신" && git push)
