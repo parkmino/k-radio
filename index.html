@@ -24,7 +24,7 @@
     <h1>📻 한국 통합 라디오 플레이어</h1>
     
     <select id="channel-selector">
-        <option value="">듣고 싶은 채널을 선택하세요</option>
+        <option value="">데이터를 불러오는 중입니다...</option>
     </select>
 
     <video id="video" controls autoplay></video>
@@ -43,9 +43,6 @@
 </div>
 
 <script>
-    // GitHub Action에서 생성된 JSON 데이터 (id: {name, url})
-    const channelData = {"1fm":{"name":"KBS 1FM (Classic)","url":"https://1fm.gscdn.kbs.co.kr/1fm_192_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8xZm0uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwOTAzNjV9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=JMwgf-7cFkArCgtmhlkV4kpWQCu~uaa-GFqOSQ-pnW2cttXz-mioJHQgoMHiZSEhIkkn944reSkPlb-EgbCVVQb1lR9R4ZosNboCpSbsFSwNR1kO1Bauk5Gi8X2ORnzj8QLwBq7I8vU4uQSQzaKeL10Jw7AgEx3MkKjeyGoPXX5v1ZAci1QrpZhZQ6ZTTv~UMCuSXXyskz571R5zJe3vyiwibW-OMXHTHiD1tJCu2TeC7ygNNxvpEMX~663iYgHvjG~onK41jwKKwrZwNyussDsioT98lhidAjPgnyjP~trVv8VUEQ3i~wtcEXS8wXd-8INdtiWPR3ABvhs~Pyxwmg__"},"2fm":{"name":"KBS 2FM (Cool)","url":"https://2fm-ad.gscdn.kbs.co.kr/2fm_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8yZm0tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwOTAzNzV9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=U8HhmDJs2gfIOAWNVKEFEciyPgQrMVP4SnM6pj1DnOrw2svifgadWBUy2tH~zPVRA5iZ6NTFrZA9hXOFOsgLKhB7D89uyGQg6s2QD-GVhVaPm1oCyBrDR13F2SijCU5gvl0nIUpBBuqzkFY74BLSVZMQ4pqrf1h3mHoqaRnFbc3xLhnKgmaA9Jr37RVu29ypy1cbFalnf66aZ5llUCujcvtbcCm2miFIq5bUGcrJJyQqB3xftMACquDF39C-JAKX4L6Uq04tbRuxuMobocvjLkaOBPmfIaDyaeCXsT288yomGfPgNWNyNB-PA-vMqoXAjT1bRL2VDNfBfaImnXaHrA__"},"1r":{"name":"KBS 1Radio","url":"https://1radio.gscdn.kbs.co.kr/1radio_192_4.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8xcmFkaW8uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwOTA0MTR9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=XqZMt1qIU8icGYKIwp9Gwi0bcAr1vV5O3nVUMq~87A5OMV2LQsisNQqiZdmQfdA7v81bH3ad2njLhLqvxsoZNClwkyBW~cG1srLlRxb5TIAbpZa-F~v4yScM6dJgROGLAdf85L3moXWLy-GckfD76DOkBxTxFuytl15nmdvk2kr5IvRebT8Ep-j7ce7A1Mps9w3QyRpKUYnU-Bl6W80hcDmtHE726e5hQT2IzSvFdnpiFABjSqyc9q5I1MO3W2fyIu~A2RggkbgXInQbnQQpgIEPP7~NJ2J4kOTFmMSy8vonTsA0EqPYHkYieDRMDickJYmiMvNtBK8fhr-eJsUqsQ__"},"2r":{"name":"KBS 2Radio (Happy)","url":"https://2radio-ad.gscdn.kbs.co.kr/2radio_ad_192_1.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8ycmFkaW8tYWQuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwOTAzODV9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=iFW-zFcNBrMDlCz~V-WzN~QKRYafpkrmV7zTb6vm4rJpB3B7jk0cwZ8IIgKvIak2BtI-07f7lq3x6ILdeW5bRTZAnvjvEdWUVzMhgkdMJ30UnY8t5glQ87gMHDJS68NZ7OMq4HmOV1OSWCJrTBJAgesK5MoM096gFwo3AwPOyrqfl6P~Z5cB92oXJ-eZfeUL9HLqVv-DWPO-12-~RCC-gTtIEvv6VLhODwb5LstT-98riKGiXiehjCXZnvHSiwq5gvX8MOIJpnhNSzxGxBn-JCB4IBGrbyDaB3CvCpD5dREKOIMrFKTQPsjpgSxS1G5OD~9jZ9a2lU6wbWPt8U8OlA__"},"3r":{"name":"KBS 3Radio","url":"https://3radio.gscdn.kbs.co.kr/3radio_192_3.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8zcmFkaW8uZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwOTAzNjl9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=Oii3pSgpPDYPpugi33IyWKUWATvD1Z6tTaEbK0IKnQ-6j44EZW3PUe-XDq2e36ga4acanqaXS1xEdY~gtljPNzvB8UAdH6hYTkrM7tqt0yc~78TFxZqqc03jV7B0pB6QMSCMAuFwi05iB0dmnFawJgCigalU2qBTdayQ3g6VE4j0B~LAoVN4OVZFO1ikuS5fwKk~XCr5rqBja34FiQPTg-VgMMY-fq6737PDy0a2dK~kbaaFkZu2dnOkG7YqGFrjmRtHZU9yEFrAOENne7xQGEc827KQCZ6-XpV4YeMM6Mj84q7fziFDWdw9b3a0EeHLeHLTccvuC8FsYgmq0DXLUw__"},"han":{"name":"KBS 한민족방송","url":"https://hanminjokradio.gscdn.kbs.co.kr/hanminjokradio_192_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9oYW5taW5qb2tyYWRpby5nc2Nkbi5rYnMuY28ua3IvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4MjA5MDM3NX19fV19{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=Ifzek7EfYRMBq-upTQVnNXnJPlUf2zk8Yx3KDtedkSrOj7T-WCPHiLpN8TbxHmbvrpi4AxpLG968WQkIdiYOKapt1fm4iDxAQ3EP0fUeUtOrd0zCb5Sl5kCzCeURiT5JhPqv8hGpjk5S9hMPF01Hk9hGnnnOFjlbj6lW6yO7-qRMCVXXteadrBDd3LYRXt9Nq-0x-HmovsV51b3ArzrN9VKCURcr~W4IbvA8h78H6VENM2a3658VK1hYeLXTA-5twSY3BzNb~dIG-7WRgrQgb3smTU0ZCnkH0Njzba3J87Mzfngq2rZzHgRlZ~JHxBVLwym5daSgkG2aaxDOpbLLmg__"},"mul":{"name":"KBS 다문화방송","url":"https://wink11.gscdn.kbs.co.kr/ch1_64_2.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly93aW5rMTEuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3ODIwOTAzNzZ9fX1dfQ__{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=WtN277f3MP82pK0K84aTkEFdumSXNkeKRbWL-8qssltWnfD4V~k6kQYOuV305iGA3wIpGcfZ4xEgKdzkv1jBCf2zCQsCPtusCjIo~I1B7WDuRNEBFrkq1PL0RXA8iILaghOMvHHDp6OqtaWzIG365gGDaaBuW-eqedEjFVGWCbk1cDfiSiHuT0BjHj38SedLXbVsiD6a3FUz6K24iD0d18fAySTphCeZnhccEkjhb35p-zyo0lwgEeTX3qVXqlkSb-WcFGuPGQMCX7h6oasO4SiaWHIoBnLkbtDx8~Sud3bGZDEgPTUUOP0hjOh8qTo-yvKp59ZXGt1cPnhyE5XtfQ__"},"eng":{"name":"KBS WORLD","url":"https://worldradio.gscdn.kbs.co.kr/worldradio_192_4.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly93b3JsZHJhZGlvLmdzY2RuLmticy5jby5rci8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzgyMDkwMzcyfX19XX0_{{CHANNELS_JSON}}Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA{{CHANNELS_JSON}}Signature=bAno1fExh7p~hHX8NVehdHj43yh7LJcPcqQOt8DnEWw5IGM2a1KMm8Jg8jvgbU7WY81heSTSBNZB7mYjxFXKHIxYFEvDK5MaBu6Y8GpPkle6pMtxZovAQfvktSuNATpN5-1uxUGBW0-6LDHejd~H5kV-Dkf8tHu3vUzYPX97bpsJCsq3a~zYl7qhW7HiXHI0B2YMjS9Qn6z0Ew7wH~A1LJr1TldVUK5DrWZrajuTimgAg9ZnmVfrFj7cHI2i4iUoxG8bLPPzA-XcCZHwjq~MdSeaTUPDqIeoTKUVybZp1HC8BaIaoN6YuBtELAfXCoQ7u1xYyU-EelNXE~TW~3eW-A__"},"mbcm":{"name":"MBC 올댓뮤직","url":"https://minicw.imbc.com/dchm/_definst_/chm.stream/playlist.m3u8?_lsu_sa_=61F1461CB3D731E47C48850830211B42A5CB3F555406F23A32900Aa906CE3BC65DaBD3C93FC2E641E01039E161b961A879AEABF0F9964365FFCCBC7EDCBD05E3754E39A0C013E2287C1E3F71CC5A8FC188DD93B61BAFA3914E2E07DDA15578BE60CDB48526FC7858A1EEA021D6AD83A5"},"mbc4u":{"name":"MBC FM4U","url":"https://minimw.imbc.com/dmfm/_definst_/mfm.stream/playlist.m3u8?_lsu_sa_=6751F61603C73E542B48F54E3201B94C65083D25160132A6365039aBD6C83B5657a8638234227149A07D39C1FBb211B32ABB5B6634828B8723C75B5125CAA3528C66FD9E40E35311EDA79A54107E6BC45E7EE98E1D3A0EC968538E4059A15716773F1AF9981BA0B5E51F43CDA915D193"},"mbcfm":{"name":"MBC 표준FM","url":"https://minisw.imbc.com/dsfm/_definst_/sfm.stream/playlist.m3u8?_lsu_sa_=6001DA1F33C538B4514965893351A24785F33505BE0BE28032105DaB76EF33D60BaAE3F2321265433059361145b881F61DE630BE113A28DCC607240C436B82996BB944731A46EAD031A291BB32B636EC273AD4C569E8AE8ED192A6327074FB964CECBFADE660FE16EF96EF2862215789"},"sbsp":{"name":"SBS 파워FM","url":"https://radiolive.sbs.co.kr/powerpc/powerfm.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODE5NjA4MjUsInBhdGgiOiIvcG93ZXJmbS5zdHJlYW0iLCJkdXJhdGlvbiI6LTEsInVubyI6IjFhZTI0YzIzLTZiYWItNGQ1Mi1hNjI1LTZkODVhNjk2N2E2NiIsImlhdCI6MTc4MTkxNzYyNX0.hIPSYKzKQh6oOU-2h_m1tXVm6H4VnKM0XUCraEtEeeU"},"sbsl":{"name":"SBS 러브FM","url":"https://radiolive.sbs.co.kr/lovepc/lovefm.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODE5NjA4MjYsInBhdGgiOiIvbG92ZWZtLnN0cmVhbSIsImR1cmF0aW9uIjotMSwidW5vIjoiOTlkOWEwOGItNTI1MC00MjI1LTgyOGYtNzZiZmJiM2MyMWRjIiwiaWF0IjoxNzgxOTE3NjI2fQ.-vusKSbXagWafJ9ZUrQX58Z87HdcNrafpmt57Mami44"},"sbsg":{"name":"SBS 고릴라M","url":"https://radiolive.sbs.co.kr/sbsdmbpc/sbsdmb.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODE5NjA4MjcsInBhdGgiOiIvc2JzZG1iLnN0cmVhbSIsImR1cmF0aW9uIjotMSwidW5vIjoiZWM3ZDU0MjUtYjVlOC00ZWVlLTg1NDEtNjFkODI1MDc5OGZmIiwiaWF0IjoxNzgxOTE3NjI3fQ.TM-qLAjQa6dr3M9UzMWTBjLrR3qd9mu1pBak3BwIP_Y"}}};
-    
     const selector = document.getElementById('channel-selector');
     const video = document.getElementById('video');
     const streamUrlText = document.getElementById('stream-url-text');
@@ -53,20 +50,34 @@
     const plsUrlText = document.getElementById('pls-url');
     let hls;
 
-    // 드롭다운 메뉴 채우기
-    for (const [id, data] of Object.entries(channelData)) {
-        const option = document.createElement('option');
-        option.value = id;
-        option.textContent = data.name;
-        selector.appendChild(option);
-    }
+    // 외부 JSON 파일에서 실시간 채널 데이터 불러오기 (브라우저 캐시 방지)
+    fetch('channels.json?t=' + new Date().getTime())
+        .then(response => {
+            if (!response.ok) throw new Error("네트워크 응답 오류");
+            return response.json();
+        })
+        .then(channelData => {
+            window.channelData = channelData;
+            selector.innerHTML = '<option value="">듣고 싶은 채널을 선택하세요</option>';
+            
+            for (const [id, data] of Object.entries(channelData)) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = data.name;
+                selector.appendChild(option);
+            }
+        })
+        .catch(error => {
+            selector.innerHTML = '<option value="">❌ 채널 리스트를 불러오지 못했습니다.</option>';
+            console.error('채널 데이터 Fetch 오류:', error);
+        });
 
     const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
 
     selector.addEventListener('change', (event) => {
         const channelId = event.target.value;
         
-        if (!channelId) {
+        if (!channelId || !window.channelData) {
             video.pause();
             streamUrlText.innerText = "채널을 선택해주세요.";
             plsUrlText.innerText = "채널을 선택해주세요.";
@@ -75,17 +86,15 @@
             return;
         }
 
-        const channelInfo = channelData[channelId];
+        const channelInfo = window.channelData[channelId];
         const streamUrl = channelInfo.url;
         const plsFileName = `${channelId}.pls`;
 
-        // UI 텍스트 및 링크 업데이트
         streamUrlText.innerText = streamUrl;
         plsUrlText.innerText = baseUrl + plsFileName;
         plsDownload.href = plsFileName;
         plsDownload.classList.remove('btn-disabled');
 
-        // 재생 로직
         if (Hls.isSupported() && streamUrl.includes('.m3u8')) {
             if (hls) { hls.destroy(); }
             hls = new Hls();
@@ -93,7 +102,6 @@
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function() { video.play(); });
         } else {
-            // HLS 미지원 환경이거나 일반 aac/mp3 스트리밍인 경우
             if (hls) { hls.destroy(); }
             video.src = streamUrl;
             video.play();
