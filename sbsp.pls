@@ -1,0 +1,6 @@
+[playlist]
+File1=https://radiolive.sbs.co.kr/powerpc/powerfm.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODE5NjA4MjUsInBhdGgiOiIvcG93ZXJmbS5zdHJlYW0iLCJkdXJhdGlvbiI6LTEsInVubyI6IjFhZTI0YzIzLTZiYWItNGQ1Mi1hNjI1LTZkODVhNjk2N2E2NiIsImlhdCI6MTc4MTkxNzYyNX0.hIPSYKzKQh6oOU-2h_m1tXVm6H4VnKM0XUCraEtEeeU
+Title1=SBS 파워FM
+Length1=-1
+NumberOfEntries=1
+Version=2

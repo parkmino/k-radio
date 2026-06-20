@@ -1,0 +1,6 @@
+[playlist]
+File1=https://radiolive.sbs.co.kr/sbsdmbpc/sbsdmb.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODE5NjA4MjcsInBhdGgiOiIvc2JzZG1iLnN0cmVhbSIsImR1cmF0aW9uIjotMSwidW5vIjoiZWM3ZDU0MjUtYjVlOC00ZWVlLTg1NDEtNjFkODI1MDc5OGZmIiwiaWF0IjoxNzgxOTE3NjI3fQ.TM-qLAjQa6dr3M9UzMWTBjLrR3qd9mu1pBak3BwIP_Y
+Title1=SBS 고릴라M
+Length1=-1
+NumberOfEntries=1
+Version=2

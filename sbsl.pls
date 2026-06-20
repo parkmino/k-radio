@@ -1,0 +1,6 @@
+[playlist]
+File1=https://radiolive.sbs.co.kr/lovepc/lovefm.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODE5NjA4MjYsInBhdGgiOiIvbG92ZWZtLnN0cmVhbSIsImR1cmF0aW9uIjotMSwidW5vIjoiOTlkOWEwOGItNTI1MC00MjI1LTgyOGYtNzZiZmJiM2MyMWRjIiwiaWF0IjoxNzgxOTE3NjI2fQ.-vusKSbXagWafJ9ZUrQX58Z87HdcNrafpmt57Mami44
+Title1=SBS 러브FM
+Length1=-1
+NumberOfEntries=1
+Version=2
